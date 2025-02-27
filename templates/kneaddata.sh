@@ -11,4 +11,17 @@ kneaddata \
     --input1 "${fastq_1}" \
     --input2 "${fastq_2}" \
     --reference-db _DB \
-    --output "${sample}"
+    --output "${sample}" \
+    --threads ${task.cpus} \
+    --output-prefix "${sample}" \
+    --log-level INFO \
+    --sequencer-source "${params.sequencer_source}" \
+    --decontaminate-pairs "${params.decontaminate_pairs}" \
+
+# Make sure to compress the outputs
+echo "\$(date) Compressing outputs"
+gzip "${sample}/*fastq"
+
+echo "\$(date) Done"
+
+ls -lah "${sample}/"
