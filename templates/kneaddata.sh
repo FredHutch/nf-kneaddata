@@ -17,6 +17,7 @@ kneaddata \
     --log-level INFO \
     --sequencer-source "${params.sequencer_source}" \
     --decontaminate-pairs "${params.decontaminate_pairs}" \
+    --reorder
 
 # Make sure to compress the outputs
 echo "\$(date) Compressing outputs"
