@@ -17,13 +17,16 @@ kneaddata \
     --log-level INFO \
     --sequencer-source "${params.sequencer_source}" \
     --decontaminate-pairs "${params.decontaminate_pairs}" \
+    --run-fastqc-start \
+    --run-fastqc-end \
+    --remove-intermediate-output \
     --reorder \
     ${params.kneaddata_params}
 
 # Make sure to compress the outputs
-echo "\$(date) Compressing outputs"
-gzip "${sample}/*fastq"
-
-echo "\$(date) Done"
+find . -name '*.fastq' | while read fastq; do
+    echo "\$(date) Compressing \$fastq"
+    gzip "\$fastq"
+done
 
 ls -lah "${sample}/"
