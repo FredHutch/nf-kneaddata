@@ -12,7 +12,7 @@ kneaddata \
     --input2 "${fastq_2}" \
     --reference-db _DB \
     --output "${sample}" \
-    --threads ${task.cpus} \
+    --threads 1 \
     --output-prefix "${sample}" \
     --log-level INFO \
     --sequencer-source "${params.sequencer_source}" \
