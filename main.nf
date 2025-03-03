@@ -1,5 +1,6 @@
 process kneaddata {
     container "${params.container}"
+    publishDir "${params.outdir}"
     input:
         tuple val(sample), path(fastq_1), path(fastq_2)
         path "_DB"
