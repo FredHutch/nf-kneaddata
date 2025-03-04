@@ -1,15 +1,32 @@
 process kneaddata {
-    container "${params.container}"
+    container "${params.container_kneaddata}"
     publishDir "${params.outdir}"
     input:
         tuple val(sample), path(fastq_1), path(fastq_2)
         path "_DB"
 
     output:
-        path "${sample}/*"
+        path "${sample}/*.log", emit: logs
+        path "${sample}/*.fastq.gz", emit: fastq
+        path "${sample}/fastqc/*", emit: fastqc
 
     script:
     template "kneaddata.sh"
+}
+
+process multiqc {
+    container "${params.container_multiqc}"
+    publishDir "${params.outdir}"
+    input:
+        path "fastqc_output.*"
+
+    output:
+        path "multiqc_report.html"
+
+    script:
+    """#!/bin/bash
+multiqc .
+    """
 }
 
 
@@ -46,4 +63,5 @@ Optional:
         .set {inputs}
     
     kneaddata(inputs, db)
+    multiqc(kneaddata.out.fastqc.flatten().toSortedList())
 }
