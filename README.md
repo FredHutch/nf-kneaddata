@@ -1,8 +1,7 @@
 # nf-kneaddata
 Nextflow workflow used to run kneaddata
 
-## KneadData (BioBaker)
-
+## KneadData (BioBakery)
 The KneadData utility is used to preprocess metagenomic data for
 microbiome analysis by removing contaminating host sequences and
 running quality trimming.
@@ -12,24 +11,27 @@ running quality trimming.
 A selection of reference database is provided so that the appropriate
 host genome can be used for decontamination.
 
-#### Outputs
+### Outputs
 
-Four types of output files will be created (where $INPUTNAME is the basename of $INPUT):
+The files output for each samples are organized into a top-level directory
+with the sample name.
 
-1. The final file of filtered sequences after trimming
+#### Sequences (FASTQ)
 
-  - $OUTPUT_DIR/$INPUTNAME_kneaddata.fastq
+Within that folder, there are FASTQ files for each of the scenarios:
 
-2. The contaminant sequences from testing against a database
+1. Both reads in the pair pass.
+  - ${SAMPLE}\_paired_[1/2].fastq.gz
+2. The read in the first mate passes, and the one in the second does not pass.
+  - ${SAMPLE}\_unmatched_1.fastq.gz
+  - ${SAMPLE}\_${DB}\_unmatched_2.fastq.gz
+3. The read in the second mate passes, and the one in the first does not pass.
+  - ${SAMPLE}\_${DB}\_unmatched_1.fastq.gz
+  - ${SAMPLE}\_unmatched_2.fastq.gz
+4. Both reads fail
+  - ${SAMPLE}\_paired_[1/2].fastq.gz
 
-  - $OUTPUT_DIR/$INPUTNAME_kneaddata_$DATABASE_$SOFTWARE_contam.fastq
+#### Quality Control (MultiQC)
 
-3. The log file from the run
-
-  - $OUTPUT_DIR/$INPUTNAME_kneaddata.log
-
-4. The FASTQ file of trimmed sequences
-
-  - $OUTPUT_DIR/$INPUTNAME_kneaddata.trimmed.fastq
-
-  - Trimmomatic is run with the following arguments by default “SLIDINGWINDOW:4:20 MINLEN:70”. The minimum length is computed as 70 percent of the length of the input reads.
+The FASTQ summary of all inputs and outputs are aggregated in a single
+[MultiQC report](https://seqera.io/multiqc/) - `multiqc_report.html`
